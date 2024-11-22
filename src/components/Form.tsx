@@ -1,7 +1,7 @@
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Check, ChevronsUpDown } from "lucide-react"
-
+import React, { useState } from "react"
 import { cn } from "@/lib/utils"
 import { Button } from "@/components/ui/button"
 import {
@@ -17,7 +17,12 @@ import {
     PopoverContent,
     PopoverTrigger,
 } from "@/components/ui/popover"
-import { useState } from "react"
+import { Action, initialState } from "@/App"
+
+interface Props {
+    state: typeof initialState,
+    dispatch: (action: Action) => void
+}
 
 const fontFamily = [
     { label: "Arial", value: "arial" },
@@ -26,7 +31,7 @@ const fontFamily = [
     { label: "Courier New", value: "courier-new" },
 ]
 
-export default function Form() {
+export default function Form(props: Props) {
     const [open, setOpen] = useState(false)
     const [value, setValue] = useState("")
 
@@ -43,22 +48,28 @@ export default function Form() {
     return (
         <div className="flex flex-col gap-y-8 m-10 p-8 bg-neutral-100">
             <div className="grid w-full max-w-sm items-center gap-1.5">
-                <Input id="picture" type="file" className="hidden"/>
+                <Input id="picture" type="file" className="hidden" />
                 <Button variant="default" type="button" onClick={handleFileInput}>Load config</Button>
             </div>
             <div className="flex flex-col items-start gap-3 max-w-sm">
                 <Label htmlFor="text">Config Name</Label>
-                <Input type="text" id="text" placeholder="Config Name" />
+                <Input type="text" id="text" placeholder="Config Name" value={props.state.configName} onChange={(e: React.ChangeEvent<HTMLInputElement>
+                ) => props.dispatch({
+                    type: 'SET_CONFIG_NAME',
+                    payload: e.target.value
+                })} />
             </div>
             <div className="flex flex-col items-start gap-3 max-w-sm">
                 <Label htmlFor="botName">Bot Name</Label>
-                <Input type="text" id="botName" placeholder="Bot Name" />
+                <Input type="text" id="botName" placeholder="Bot Name" value={props.state.botName} onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
+                    props.dispatch({
+                        type: 'SET_BOT_NAME',
+                        payload: e.target.value
+                    })
+                }} />
             </div>
             <div className="flex flex-col items-start gap-3 max-w-sm">
                 <Label htmlFor="fontFamily">Font Family</Label>
-                <Input type="text" id="fontFamily" placeholder="Font Family" />
-            </div>
-            <div>
                 <Popover open={open} onOpenChange={setOpen}>
                     <PopoverTrigger asChild>
                         <Button
@@ -69,7 +80,7 @@ export default function Form() {
                         >
                             {value
                                 ? fontFamily.find((framework) => framework.value === value)?.label
-                                : "Select framework..."}
+                                : "Select font style..."}
                             <ChevronsUpDown className="opacity-50" />
                         </Button>
                     </PopoverTrigger>
@@ -77,7 +88,7 @@ export default function Form() {
                         <Command>
                             <CommandInput placeholder="Search framework..." />
                             <CommandList>
-                                <CommandEmpty>No framework found.</CommandEmpty>
+                                <CommandEmpty>No font found.</CommandEmpty>
                                 <CommandGroup>
                                     {fontFamily.map((framework) => (
                                         <CommandItem
@@ -105,27 +116,58 @@ export default function Form() {
             </div>
             <div className="flex flex-col items-start gap-3 max-w-sm">
                 <Label htmlFor="headerColor">Header Color</Label>
-                <Input type="color" id="headerColor" placeholder="Header Color" />
+                <Input type="color" id="headerColor" placeholder="Header Color" value={props.state.headerColor} onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
+                    props.dispatch({
+                        type: 'SET_HEADER_COLOR',
+                        payload: e.target.value
+                    })
+                }}
+                />
             </div>
             <div className="flex flex-col items-start gap-3 max-w-sm">
                 <Label htmlFor="headerFontColor">Header font color</Label>
-                <Input type="color" id="headerFontColor" placeholder="Header font color" />
+                <Input type="color" id="headerFontColor" placeholder="Header font color" value={props.state.headerFontColor} onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
+                    props.dispatch({
+                        type: 'SET_HEADER_FONT_COLOR',
+                        payload: e.target.value
+                    })
+                }} />
             </div>
             <div className="flex flex-col items-start gap-3 max-w-sm">
                 <Label htmlFor="bgColor">Background Color</Label>
-                <Input type="color" id="bgColor" placeholder="Background Color" />
+                <Input type="color" id="bgColor" placeholder="Background Color" value={props.state.backgroundColor} onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
+                    props.dispatch({
+                        type: 'SET_BACKGROUND_COLOR',
+                        payload: e.target.value
+                    })
+                }} />
             </div>
             <div className="flex flex-col items-start gap-3 max-w-sm">
                 <Label htmlFor="chatFontColor">Chat font color</Label>
-                <Input type="color" id="chatFontColor" placeholder="Chat font color" />
+                <Input type="color" id="chatFontColor" placeholder="Chat font color" value={props.state.chatFontColor} onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
+                    props.dispatch({
+                        type: 'SET_CHAT_FONT_COLOR',
+                        payload: e.target.value
+                    })
+                }}/>
             </div>
             <div className="flex flex-col items-start gap-3 max-w-sm">
                 <Label htmlFor="avatarImage">Avatar image</Label>
-                <Input type="file" id="avatarImage" placeholder="Avatar image" accept="image/png,image/jpg,image/jpeg"/>
+                <Input type="file" id="avatarImage" placeholder="Avatar image" accept="image/png,image/jpg,image/jpeg" value={props.state.avatarImage} onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
+                    props.dispatch({
+                        type: 'SET_AVATAR_IMAGE',
+                        payload: e.target.value
+                    })
+                }} />
             </div>
             <div className="flex flex-col items-start gap-3 max-w-sm">
                 <Label htmlFor="launcherImage">Launcher image</Label>
-                <Input type="file" id="launcherImage" placeholder="Launcher image" accept="image/png,image/jpg,image/jpeg"/>
+                <Input type="file" id="launcherImage" placeholder="Launcher image" accept="image/png,image/jpg,image/jpeg" value={props.state.launcherImage} onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
+                    props.dispatch({
+                        type: 'SET_LAUNCHER_IMAGE',
+                        payload: e.target.value
+                    })
+                }}/>
             </div>
         </div>
     )
