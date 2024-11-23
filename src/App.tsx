@@ -1,6 +1,7 @@
 import { useReducer } from 'react'
 import './App.css'
 import Form from './components/Form'
+import LivePreview from './components/LivePreview'
 
 export const initialState = {
   configName: '',
@@ -43,13 +44,15 @@ const reducer = (state: typeof initialState, action: Action) => {
       return state
   }
 }
+
 function App() {
 
   const [state, dispatch] = useReducer(reducer, initialState)
 
   return (
-    <div>
+    <div className="flex flex-row justify-between w-full">
       <Form state={state} dispatch={dispatch}/>
+      <LivePreview />
     </div>
   )
 }
