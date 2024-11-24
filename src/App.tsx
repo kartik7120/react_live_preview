@@ -51,8 +51,8 @@ function App() {
 
   return (
     <div className="flex flex-row justify-between w-full">
-      <Form state={state} dispatch={dispatch}/>
-      <LivePreview />
+      <Form state={state} dispatch={dispatch} />
+      <LivePreview state={state} dispatch={dispatch} />
     </div>
   )
 }
