@@ -40,6 +40,61 @@ export default function Form(props: Props) {
 
         if (fileElement) {
             fileElement.click()
+            fileElement.addEventListener("change", (e) => {
+                if (e.target === null) {
+                    console.error("Event target not found")
+                    return
+                }
+
+                const file = e.target.files?.[0]
+                if (file) {
+                    const reader = new FileReader()
+                    reader.onload = (e) => {
+                        try {
+                            const data = JSON.parse(e.target?.result as string)
+                            props.dispatch({
+                                type: 'SET_CONFIG_NAME',
+                                payload: data.configName
+                            })
+                            props.dispatch({
+                                type: 'SET_BOT_NAME',
+                                payload: data.botName
+                            })
+                            props.dispatch({
+                                type: 'SET_FONT_FAMILY',
+                                payload: data.fontFamily
+                            })
+                            props.dispatch({
+                                type: 'SET_HEADER_COLOR',
+                                payload: data.headerColor
+                            })
+                            props.dispatch({
+                                type: 'SET_HEADER_FONT_COLOR',
+                                payload: data.headerFontColor
+                            })
+                            props.dispatch({
+                                type: 'SET_BACKGROUND_COLOR',
+                                payload: data.backgroundColor
+                            })
+                            props.dispatch({
+                                type: 'SET_CHAT_FONT_COLOR',
+                                payload: data.chatFontColor
+                            })
+                            // props.dispatch({
+                            //     type: 'SET_AVATAR_IMAGE',
+                            //     payload: data.avatarImage
+                            // })
+                            // props.dispatch({
+                            //     type: 'SET_LAUNCHER_IMAGE',
+                            //     payload: data.launcherImage
+                            // })
+                        } catch (error) {
+                            console.error(error)
+                        }
+                    }
+                    reader.readAsText(file)
+                }
+            })
         } else {
             console.error("File input not found")
         }
@@ -149,25 +204,64 @@ export default function Form(props: Props) {
                         type: 'SET_CHAT_FONT_COLOR',
                         payload: e.target.value
                     })
-                }}/>
+                }} />
             </div>
             <div className="flex flex-col items-start gap-3 max-w-sm">
                 <Label htmlFor="avatarImage">Avatar image</Label>
                 <Input type="file" id="avatarImage" placeholder="Avatar image" accept="image/png,image/jpg,image/jpeg" value={props.state.avatarImage} onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
+
+                    const imgElement = document.querySelector<HTMLImageElement>("#profile_picture")
+
                     props.dispatch({
                         type: 'SET_AVATAR_IMAGE',
                         payload: e.target.value
                     })
+
+                    if (imgElement === null) {
+                        console.error("Image element not found")
+                        return
+                    }
+
+                    const file = e.target.files?.[0]
+                    if (file) {
+                        const reader = new FileReader()
+                        reader.onload = (e) => {
+                            if (imgElement) {
+                                imgElement.src = e.target?.result as string
+                            }
+                        }
+                        reader.readAsDataURL(file)
+                    }
                 }} />
             </div>
             <div className="flex flex-col items-start gap-3 max-w-sm">
                 <Label htmlFor="launcherImage">Launcher image</Label>
                 <Input type="file" id="launcherImage" placeholder="Launcher image" accept="image/png,image/jpg,image/jpeg" value={props.state.launcherImage} onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
+
+                    const imgElement = document.querySelector<HTMLImageElement>("#launcher_image")
+
                     props.dispatch({
                         type: 'SET_LAUNCHER_IMAGE',
                         payload: e.target.value
                     })
-                }}/>
+
+                    if (imgElement === null) {
+                        console.error("Image element not found")
+                        return
+                    }
+
+                    const file = e.target.files?.[0]
+
+                    if (file) {
+                        const reader = new FileReader()
+                        reader.onload = (e) => {
+                            if (imgElement) {
+                                imgElement.src = e.target?.result as string
+                            }
+                        }
+                        reader.readAsDataURL(file)
+                    }
+                }} />
             </div>
         </div>
     )
