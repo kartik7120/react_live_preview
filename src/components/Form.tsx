@@ -45,7 +45,7 @@ export default function Form(props: Props) {
                     console.error("Event target not found")
                     return
                 }
-
+                // @ts-expect-error Property 'files' might not exist on type 'EventTarget'
                 const file = e.target.files?.[0]
                 if (file) {
                     const reader = new FileReader()
